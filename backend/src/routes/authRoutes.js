@@ -2,12 +2,10 @@ import express from "express";
 
 const router = express.Router();
 
-import { signup } from "../controller/authontroller.js";
+import { signup, login, logout } from "../controller/authontroller.js";
 
 router.post("/signup", signup);
-
-router.get("/logout", (req, res) => {
-  res.send("Logout Route");
-});
+router.post("/login", login);
+router.post("/logout", logout);
 
 export default router;
