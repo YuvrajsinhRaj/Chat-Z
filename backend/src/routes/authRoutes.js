@@ -2,13 +2,9 @@ import express from "express";
 
 const router = express.Router();
 
-router.get("/signup", (req, res) => {
-  res.send("Signup Route");
-});
+import { signup } from "../controller/authontroller.js";
 
-router.get("/login", (req, res) => {
-  res.send("Login Route");
-});
+router.post("/signup", signup);
 
 router.get("/logout", (req, res) => {
   res.send("Logout Route");
