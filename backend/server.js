@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const __dirname = path.resolve();
 const PORT = process.env.PORT || 5174;
 
 app.use(express.json()); //req.body
+app.use(cookieParser());
 
 app.use("/api/auth", authRoute);
 app.use("/api/message", messageRoute);
