@@ -9,6 +9,9 @@ import {
   updateProfile,
 } from "../controller/authontroller.js";
 import authMiddleware from "../middleware/authMiddleware.js";
+import arcjetMiddleware from "../middleware/arcjetMiddleware.js";
+
+router.use(arcjetMiddleware); // Apply Arcjet middleware to all auth routes
 
 router.post("/signup", signup);
 router.post("/login", login);
