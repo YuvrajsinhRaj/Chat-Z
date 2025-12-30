@@ -1,7 +1,7 @@
-import aj from "../src/config/arcjet";
-import { isSpoofedBot } from "@arcjet/inject";
+import aj from "../config/arcjet.js";
+import { isSpoofedBot } from "@arcjet/inspect";
 
-export const arcjetMiddleware = async (req, res, next) => {
+const arcjetMiddleware = async (req, res, next) => {
   try {
     const decision = await aj.protect(req);
 
@@ -34,3 +34,4 @@ export const arcjetMiddleware = async (req, res, next) => {
     next();
   }
 };
+export default arcjetMiddleware;
