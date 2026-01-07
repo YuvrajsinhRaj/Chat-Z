@@ -11,7 +11,8 @@ import {
 const router = Router();
 
 // this middleware runs in all routes defined below and in order they are defined
-router.use(arcjetMiddleware, authMiddleware);
+router.use(authMiddleware);
+// router.use( arcjetMiddleware);
 
 router.get("/contacts", getAllContacts);
 router.get("/chats", getChatPartners);
