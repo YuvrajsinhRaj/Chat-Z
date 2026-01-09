@@ -1,6 +1,8 @@
+import { isObjectIdOrHexString } from "mongoose";
 import cloudinary from "../config/cloudinary.js";
 import messageModel from "../models/messageModel.js";
 import userModel from "../models/userModel.js";
+import { io, getReceiverSocketId } from "../config/socket.js";
 
 export const getAllContacts = async (req, res) => {
   try {
@@ -71,6 +73,11 @@ export const sendMessage = async (req, res) => {
     });
 
     await newMessage.save();
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
 
     res.status(201).json(newMessage);
   } catch (error) {
