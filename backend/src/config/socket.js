@@ -1,10 +1,22 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import { ENV } from "./env.js";
 import { socketAuthMiddleware } from "../middleware/socketAuthMiddleware.js";
 
 const app = express();
+
+app.use(express.json({ limit: "5mb" }));
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: ENV.CLIENT_URL,
+    credentials: true,
+  })
+);
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
