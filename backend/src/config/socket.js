@@ -40,7 +40,7 @@ const userSocketMap = {}; // {userId:socketId}
 io.on("connection", (socket) => {
   console.log("A user connected", socket.user.fullname);
 
-  const userId = socket.userId;
+  const userId = socket.user._id.toString();
   userSocketMap[userId] = socket.id;
 
   // io.emit() is used to send events to all connected clients
