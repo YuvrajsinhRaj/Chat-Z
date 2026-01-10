@@ -4,11 +4,9 @@ import { ENV } from "../config/env.js";
 
 export const socketAuthMiddleware = async (socket, next) => {
   try {
-    // extract token from http-only cookies
-    const token = socket.handshake.headers.cookie
-      ?.split("; ")
-      .find((row) => row.startsWith("token="))
-      ?.split("=")[1];
+    // extract token from  cookies
+
+     const token = socket.request.cookies?.token;
 
     if (!token) {
       console.log("Socket connection rejected: No token provided");
