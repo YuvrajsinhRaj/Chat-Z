@@ -12,7 +12,7 @@ app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ENV.CLIENT_URL,
+    origin: https://chat-z-lwfn.onrender.com,
     credentials: true,
   })
 );
