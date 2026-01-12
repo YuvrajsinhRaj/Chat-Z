@@ -24,12 +24,7 @@ function ChatContainer() {
 
     // clean up
     return () => unsubscribeFromMessages();
-  }, [
-    selectedUser,
-    getMessagesByUserId,
-    subscribeToMessages,
-    unsubscribeFromMessages,
-  ]);
+  }, [selectedUser, getMessagesByUserId, subscribeToMessages, unsubscribeFromMessages]);
 
   useEffect(() => {
     if (messageEndRef.current) {
@@ -46,9 +41,7 @@ function ChatContainer() {
             {messages.map((msg) => (
               <div
                 key={msg._id}
-                className={`chat ${
-                  msg.senderId === authUser._id ? "chat-end" : "chat-start"
-                }`}
+                className={`chat ${msg.senderId === authUser._id ? "chat-end" : "chat-start"}`}
               >
                 <div
                   className={`chat-bubble relative ${
@@ -58,11 +51,7 @@ function ChatContainer() {
                   }`}
                 >
                   {msg.image && (
-                    <img
-                      src={msg.image}
-                      alt="Shared"
-                      className="rounded-lg h-48 object-cover"
-                    />
+                    <img src={msg.image} alt="Shared" className="rounded-lg h-48 object-cover" />
                   )}
                   {msg.text && <p className="mt-2">{msg.text}</p>}
                   <p className="text-xs mt-1 opacity-75 flex items-center gap-1">
@@ -80,9 +69,10 @@ function ChatContainer() {
         ) : isMessagesLoading ? (
           <MessagesLoadingSkeleton />
         ) : (
-          <NoChatHistoryPlaceholder name={selectedUser.fullname} />
+          <NoChatHistoryPlaceholder name={selectedUser.fullName} />
         )}
       </div>
+
       <MessageInput />
     </>
   );

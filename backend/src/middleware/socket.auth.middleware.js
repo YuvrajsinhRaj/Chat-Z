@@ -1,12 +1,14 @@
 import jwt from "jsonwebtoken";
-import userModel from "../models/userModel.js";
-import { ENV } from "../config/env.js";
+import User from "../models/User.js";
+import { ENV } from "../lib/env.js";
 
 export const socketAuthMiddleware = async (socket, next) => {
   try {
-    // extract token from  cookies
-
-     const token = socket.request.cookies?.token;
+    // extract token from http-only cookies
+    const token = socket.handshake.headers.cookie
+      ?.split("; ")
+      .find((row) => row.startsWith("jwt="))
+      ?.split("=")[1];
 
     if (!token) {
       console.log("Socket connection rejected: No token provided");
@@ -21,7 +23,7 @@ export const socketAuthMiddleware = async (socket, next) => {
     }
 
     // find the user fromdb
-    const user = await userModel.findById(decoded.id).select("-password");
+    const user = await User.findById(decoded.userId).select("-password");
     if (!user) {
       console.log("Socket connection rejected: User not found");
       return next(new Error("User not found"));
@@ -31,9 +33,7 @@ export const socketAuthMiddleware = async (socket, next) => {
     socket.user = user;
     socket.userId = user._id.toString();
 
-    console.log(
-      `Socket authenticated for user: ${user.fullname} (${user._id})`
-    );
+    console.log(`Socket authenticated for user: ${user.fullName} (${user._id})`);
 
     next();
   } catch (error) {

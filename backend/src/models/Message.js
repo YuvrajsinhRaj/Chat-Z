@@ -12,12 +12,18 @@ const messageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    text: { type: String, trim: true, maxLength: 2000 },
-    image: { type: String },
+    text: {
+      type: String,
+      trim: true,
+      maxlength: 2000,
+    },
+    image: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
 
-const messageModel = mongoose.model("Message", messageSchema);
+const Message = mongoose.model("Message", messageSchema);
 
-export default messageModel;
+export default Message;
