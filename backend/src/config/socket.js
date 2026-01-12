@@ -1,68 +1,45 @@
-import express from "express";
-import http from "http";
 import { Server } from "socket.io";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import { socketAuthMiddleware } from "../middleware/socketAuthMiddleware.js";
+import http from "http";
+import express from "express";
+import { ENV } from "./env.js";
+import { socketAuthMiddleware } from "../middleware/socket.auth.middleware.js";
 
-/* ===== CONSTANTS ===== */
-const CLIENTS = [
-  "https://chat-z-lwfn.onrender.com",
-  "http://localhost:5173",
-];
-
-/* ===== APP ===== */
 const app = express();
-
-app.use(cookieParser());
-app.use(express.json({ limit: "5mb" }));
-
-app.use(
-  cors({
-    origin: CLIENTS,
-    credentials: true,
-  })
-);
-
-/* ===== SERVER ===== */
 const server = http.createServer(app);
 
-/* ===== SOCKET ===== */
 const io = new Server(server, {
   cors: {
-    origin: CLIENTS,
+    origin: [ENV.CLIENT_URL],
     credentials: true,
   },
 });
 
-/* ===== ONLINE USERS MAP ===== */
-const userSocketMap = {}; // { userId: socketId }
+// apply authentication middleware to all socket connections
+io.use(socketAuthMiddleware);
 
-/* ===== EXPORT HELPER ===== */
+// we will use this function to check if the user is online or not
 export function getReceiverSocketId(userId) {
   return userSocketMap[userId];
 }
 
-/* ===== AUTH MIDDLEWARE ===== */
-io.use(socketAuthMiddleware);
+// this is for storig online users
+const userSocketMap = {}; // {userId:socketId}
 
-/* ===== CONNECTION ===== */
 io.on("connection", (socket) => {
-  const userId = socket.user._id.toString();
+  console.log("A user connected", socket.user.fullName);
 
-  console.log("✅ User connected:", socket.user.fullname);
-
+  const userId = socket.userId;
   userSocketMap[userId] = socket.id;
 
+  // io.emit() is used to send events to all connected clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
+  // with socket.on we listen for events from clients
   socket.on("disconnect", () => {
-    console.log("❌ User disconnected:", socket.user.fullname);
-
+    console.log("A user disconnected", socket.user.fullName);
     delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
 
-/* ===== EXPORTS ===== */
 export { io, app, server };
