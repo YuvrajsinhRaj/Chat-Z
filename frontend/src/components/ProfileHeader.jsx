@@ -31,7 +31,7 @@ function ProfileHeader() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {/* AVATAR */}
-          <div className="avatar ">
+          <div className="avatar online">
             <button
               className="size-14 rounded-full overflow-hidden relative group"
               onClick={() => fileInputRef.current.click()}
@@ -58,8 +58,10 @@ function ProfileHeader() {
           {/* USERNAME & ONLINE TEXT */}
           <div>
             <h3 className="text-slate-200 font-medium text-base max-w-[180px] truncate">
-              {authUser.fullname}
+              {authUser.fullName}
             </h3>
+
+            <p className="text-slate-400 text-xs">Online</p>
           </div>
         </div>
 
@@ -79,9 +81,7 @@ function ProfileHeader() {
             onClick={() => {
               // play click sound before toggling
               mouseClickSound.currentTime = 0; // reset to start
-              mouseClickSound
-                .play()
-                .catch((error) => console.log("Audio play failed:", error));
+              mouseClickSound.play().catch((error) => console.log("Audio play failed:", error));
               toggleSound();
             }}
           >
